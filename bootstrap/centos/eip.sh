@@ -21,5 +21,5 @@ for ID in ${EIP_ALLOCID}; do
 	fi
 done
 
-return ${UNALLOCATED}
+exit ${UNALLOCATED}
 
