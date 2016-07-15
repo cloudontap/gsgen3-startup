@@ -16,7 +16,7 @@ cp -p /opt/gosource/bootstrap/fluentd/treasuredata.repo /etc/yum.repos.d/
 #
 HOST=$(hostname | cut -d '@' -f 1)
 PROJECT=$(/etc/gosource/facts.sh | grep gs:project= | cut -d '=' -f 2)
-CONTAINER=$(/etc/gosource/facts.sh | grep gs:container= | cut -d '=' -f 2)
+SEGMENT=$(/etc/gosource/facts.sh | grep gs:segment= | cut -d '=' -f 2)
 TIER=$(/etc/gosource/facts.sh | grep gs:tier= | cut -d '=' -f 2)
 COMPONENT=$(/etc/gosource/facts.sh | grep gs:component= | cut -d '=' -f 2)
 SUBCOMPONENT=""
@@ -65,7 +65,7 @@ if [[ "${LOGS}" != "" ]]; then
 	type record_transformer
 	<record>
 	    project ${PROJECT}
-	    container ${CONTAINER}
+	    segment ${SEGMENT}
 	    tier ${TIER}
 	    component ${COMPONENT}
 	    subcomponent ${SUBCOMPONENT}
