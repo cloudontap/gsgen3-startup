@@ -186,7 +186,7 @@ function fstab_mount_entry()
 }
 
 set_hostname
-mountDevice /dev/xvdp /project ext4
+mountDevice /dev/xvdp /product ext4
 mountDevice /dev/xvdc /cache
 mountDevice /dev/xvdt /temp
 

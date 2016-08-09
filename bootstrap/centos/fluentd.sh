@@ -9,13 +9,13 @@ rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
 cp -p /opt/gosource/bootstrap/fluentd/treasuredata.repo /etc/yum.repos.d/
 
 # Some key values to add to each log
-#	Ideally the project/container/tier/component/subcomponent fields should come
+#	Ideally the product/segment/tier/component/subcomponent fields should come
 #	from the tag field (via ${tag_parts[n] in the record_transformer filter) but
 #	we are waiting for CloudFormation to support for log driver information
 #	so for now we will use the facts.sh file
 #
 HOST=$(hostname | cut -d '@' -f 1)
-PROJECT=$(/etc/gosource/facts.sh | grep gs:project= | cut -d '=' -f 2)
+PRODUCT=$(/etc/gosource/facts.sh | grep gs:product= | cut -d '=' -f 2)
 SEGMENT=$(/etc/gosource/facts.sh | grep gs:segment= | cut -d '=' -f 2)
 TIER=$(/etc/gosource/facts.sh | grep gs:tier= | cut -d '=' -f 2)
 COMPONENT=$(/etc/gosource/facts.sh | grep gs:component= | cut -d '=' -f 2)
@@ -29,7 +29,7 @@ if [[ "${LOGS}" != "" ]]; then
 	yum install -y td-agent
 	
 	# Ensure buffer paths exist
-	FLUENTD_ROOT=/project/fluentd
+	FLUENTD_ROOT=/product/fluentd
 	PENDING=${FLUENTD_ROOT}/s3/pending
 	ARCHIVE=${FLUENTD_ROOT}/s3/archive
 	mkdir -p ${PENDING}
@@ -64,7 +64,7 @@ if [[ "${LOGS}" != "" ]]; then
 <filter docker.**>
 	type record_transformer
 	<record>
-	    project ${PROJECT}
+	    product ${PRODUCT}
 	    segment ${SEGMENT}
 	    tier ${TIER}
 	    component ${COMPONENT}
