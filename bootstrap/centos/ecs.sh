@@ -1,9 +1,9 @@
 #!/bin/bash -ex
 # Assumes ECS cluster is passed as an environment variable
-exec > >(tee /var/log/gosource/ecs.log|logger -t gosource-ecs -s 2>/dev/console) 2>&1
-REGION=$(/etc/gosource/facts.sh | grep gs:accountRegion= | cut -d '=' -f 2)
-CREDENTIALS=$(/etc/gosource/facts.sh | grep gs:credentials= | cut -d '=' -f 2)
-ACCOUNT=$(/etc/gosource/facts.sh | grep gs:account= | cut -d '=' -f 2)
+exec > >(tee /var/log/codeontap/ecs.log|logger -t codeontap-ecs -s 2>/dev/console) 2>&1
+REGION=$(/etc/codeontap/facts.sh | grep cot:accountRegion= | cut -d '=' -f 2)
+CREDENTIALS=$(/etc/codeontap/facts.sh | grep cot:credentials= | cut -d '=' -f 2)
+ACCOUNT=$(/etc/codeontap/facts.sh | grep cot:account= | cut -d '=' -f 2)
 aws --region ${REGION} s3 cp s3://${CREDENTIALS}/${ACCOUNT}/alm/docker/ecs.config /etc/ecs/ecs.config
 echo ECS_CLUSTER=$ECS_CLUSTER >> /etc/ecs/ecs.config
 #

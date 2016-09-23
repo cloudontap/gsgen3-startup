@@ -1,12 +1,12 @@
 #!/bin/bash -ex
-exec > >(tee /var/log/gosource/fluentd.log|logger -t gosource-fluentd -s 2>/dev/console) 2>&1
+exec > >(tee /var/log/codeontap/fluentd.log|logger -t codeontap-fluentd -s 2>/dev/console) 2>&1
 
 # Increase ulimit as per http://docs.fluentd.org/articles/install-by-rpm 
-cp -p /opt/gosource/bootstrap/fluentd/fluentd-limits.conf /etc/security/limits.d/
+cp -p /opt/codeontap/bootstrap/fluentd/fluentd-limits.conf /etc/security/limits.d/
 
 # Install the Treasure Data repo
 rpm --import https://packages.treasuredata.com/GPG-KEY-td-agent
-cp -p /opt/gosource/bootstrap/fluentd/treasuredata.repo /etc/yum.repos.d/
+cp -p /opt/codeontap/bootstrap/fluentd/treasuredata.repo /etc/yum.repos.d/
 
 # Some key values to add to each log
 #	Ideally the product/segment/tier/component/subcomponent fields should come
@@ -15,13 +15,13 @@ cp -p /opt/gosource/bootstrap/fluentd/treasuredata.repo /etc/yum.repos.d/
 #	so for now we will use the facts.sh file
 #
 HOST=$(hostname | cut -d '@' -f 1)
-PRODUCT=$(/etc/gosource/facts.sh | grep gs:product= | cut -d '=' -f 2)
-SEGMENT=$(/etc/gosource/facts.sh | grep gs:segment= | cut -d '=' -f 2)
-TIER=$(/etc/gosource/facts.sh | grep gs:tier= | cut -d '=' -f 2)
-COMPONENT=$(/etc/gosource/facts.sh | grep gs:component= | cut -d '=' -f 2)
+PRODUCT=$(/etc/codeontap/facts.sh | grep cot:product= | cut -d '=' -f 2)
+SEGMENT=$(/etc/codeontap/facts.sh | grep cot:segment= | cut -d '=' -f 2)
+TIER=$(/etc/codeontap/facts.sh | grep cot:tier= | cut -d '=' -f 2)
+COMPONENT=$(/etc/codeontap/facts.sh | grep cot:component= | cut -d '=' -f 2)
 SUBCOMPONENT=""
-LOGS=$(/etc/gosource/facts.sh | grep gs:logs= | cut -d '=' -f 2)
-REGION=$(/etc/gosource/facts.sh | grep gs:region= | cut -d '=' -f 2)
+LOGS=$(/etc/codeontap/facts.sh | grep cot:logs= | cut -d '=' -f 2)
+REGION=$(/etc/codeontap/facts.sh | grep cot:region= | cut -d '=' -f 2)
 
 # Only install the agent if a logs bucket has been provided
 if [[ "${LOGS}" != "" ]]; then

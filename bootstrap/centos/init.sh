@@ -1,9 +1,9 @@
 #!/bin/bash -x
-exec > >(tee /var/log/gosource/init.log|logger -t gosource-init -s 2>/dev/console) 2>&1
+exec > >(tee /var/log/codeontap/init.log|logger -t codeontap-init -s 2>/dev/console) 2>&1
 
 default_file_system="ext4"                                                    # the default filesystem used if not specified by user
-file="/etc/gosource/facts.sh"                                                # location for facts.sh file.
-host_string="gs:name"                                                         # string name to be searched in facts.sh file
+file="/etc/codeontap/facts.sh"                                                # location for facts.sh file.
+host_string="cot:name"                                                         # string name to be searched in facts.sh file
 host_file="/etc/sysconfig/network"                                            # location to set hostname
 instance_id=`curl http://169.254.169.254/latest/meta-data/instance-id`
 local_ip=`/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}' |tr "." "-"`
