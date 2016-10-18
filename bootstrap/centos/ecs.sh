@@ -1,11 +1,22 @@
-#!/bin/bash -ex
+#!/bin/bash -x
 # Assumes ECS cluster is passed as an environment variable
 exec > >(tee /var/log/codeontap/ecs.log|logger -t codeontap-ecs -s 2>/dev/console) 2>&1
 REGION=$(/etc/codeontap/facts.sh | grep cot:accountRegion= | cut -d '=' -f 2)
 CREDENTIALS=$(/etc/codeontap/facts.sh | grep cot:credentials= | cut -d '=' -f 2)
 ACCOUNT=$(/etc/codeontap/facts.sh | grep cot:account= | cut -d '=' -f 2)
+
+# Check if a template for the ECS config has been provided
 aws --region ${REGION} s3 cp s3://${CREDENTIALS}/${ACCOUNT}/alm/docker/ecs.config /etc/ecs/ecs.config
+if [[ ! -f /etc/ecs/ecs.config ]]; then
+cat > /etc/ecs/ecs.config << EOF
+ECS_AVAILABLE_LOGGING_DRIVERS=["json-file","syslog","journald","gelf","fluentd"]
+ECS_LOGLEVEL=warn
+EOF
+fi
+
+# Add the cluster
 echo ECS_CLUSTER=$ECS_CLUSTER >> /etc/ecs/ecs.config
+
 #
 # Add log driver to docker startup options if provided
 if [[ "${ECS_LOGLEVEL}" != "" ]]; then
