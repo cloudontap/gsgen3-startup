@@ -186,7 +186,9 @@ function fstab_mount_entry()
 }
 
 set_hostname
-mountDevice /dev/xvdp /product ext4
+mountDevice /dev/xvdp /codeontap ext4
+# For backwards compatability with previous name
+ln -s /codeontap /product
 mountDevice /dev/xvdc /cache
 mountDevice /dev/xvdt /temp
 
